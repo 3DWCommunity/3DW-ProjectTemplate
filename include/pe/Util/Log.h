@@ -1,8 +1,6 @@
 #pragma once
 
 #include "hk/diag/diag.h"
-#include "pe/Enet/NetClient.h"
-#include "pe/Enet/Packets/Log.h"
 #include <cstdio>
 #include <sead/container/seadPtrArray.h>
 #include <sead/heap/seadHeap.h>
@@ -26,12 +24,6 @@ namespace pe {
         size_t size = snprintf(nullptr, 0, fmt, args...); \
         char* msg = addLog(LogType::TYPE, size);          \
         snprintf(msg, size + 1, fmt, args...);            \
-        enet::NetClient* client = enet::getNetClient();   \
-        if (client && client->isConnected()) {            \
-            enet::ToS_Log packet(msg, (u8)LogType::TYPE); \
-            client->sendPacket(&packet);                  \
-            client->flush();                              \
-        }                                                 \
         hk::diag::debugLog("%s", msg);                    \
     }
 

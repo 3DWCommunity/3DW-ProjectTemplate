@@ -2,6 +2,7 @@
 #include "hk/diag/diag.h"
 #include "nn/fs.h"
 #include "nn/init.h"
+#include "pe/Util/Log.h"
 #include "vapours/results/results_common.hpp"
 
 namespace FsHelper {

@@ -8,26 +8,14 @@
 #include "nn/socket.h"
 #include "pe/BunbunMod.h"
 #include "pe/DbgGui/DbgGui.h"
-#include "pe/DbgGui/Windows/Multiplayer.h"
 #include "pe/EchoEmitterMod.h"
 #include "pe/Exception.h"
 #include "pe/Execute/ExecuteDirectorExtensions.h"
 #include "pe/Factory/ProjectActorFactory.h"
 #include "pe/Hacks/FSHacks.h"
 #include "pe/Hacks/PlacementHolderMod.h"
-#include "pe/Hacks/RCSPlayers.h"
-#include "pe/Hacks/TopMenuSceneMod.h"
 #include "pe/Hacks/Tweaks.h"
-#include "pe/Multiplayer/DisasterSync.h"
-#include "pe/Multiplayer/MultiplayerManager.h"
-#include "pe/Multiplayer/SaveDataSync.h"
 #include "pe/Util/Log.h"
-
-HkTrampoline<void, SingleModeScene*> singleModeSceneDtorHook = hk::hook::trampoline([](SingleModeScene* thisPtr) -> void {
-    pe::MultiplayerManager* mgr = pe::MultiplayerManager::instance();
-    mgr->destroyStatusText();
-    singleModeSceneDtorHook.orig(thisPtr);
-});
 
 extern "C" void hkMain() {
     {
@@ -36,20 +24,13 @@ extern "C" void hkMain() {
         nn::socket::Initialize(pool, poolSize, 0x4000, 0xe);
     }
 
-    singleModeSceneDtorHook.installAtOffset(hk::ro::getMainModule(), 0x003e6810);
-
     pe::initUserExceptionHandler();
-    pe::installFSHacks();
     pe::initProjectActorFactoryHook();
     pe::initBunbunModHooks();
     pe::initEchoEmitterModHooks();
     pe::initPlacementHolderModHooks();
     pe::initExecuteDirectorExtensionHooks();
     pe::installTweaks();
-    pe::RCSPlayers::initHooks();
-    pe::installTopMenuSceneMod();
-    pe::installDisasterSyncHooks();
     pe::gui::initDbgGuiHooks();
-    //  pe::initWiiUModHooks();
-    pe::installSaveDataSyncHooks();
+    //   pe::initWiiUModHooks();
 }

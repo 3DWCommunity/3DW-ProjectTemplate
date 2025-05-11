@@ -15,9 +15,6 @@
 	path = server/Library/LibNerve
 	url = https://github.com/fruityloops1/LibNerve
 	
-[submodule "lib/enet-nx"]
-	path = lib/enet-nx
-	url = https://github.com/fruityloops1/enet-nx
 [submodule "server/Library/buddy_alloc"]
 	path = server/Library/buddy_alloc
 	url = https://github.com/spaskalev/buddy_alloc

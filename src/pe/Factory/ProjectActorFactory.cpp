@@ -6,34 +6,23 @@
 #include "pe/MapObj/NeedleSwitchParts.h"
 #include "pe/MapObj/PatanPanel.h"
 #include "pe/MapObj/PatanPanelStarter.h"
-#include "pe/Multiplayer/MapObj/ClockMapPartsNet.h"
-#include "pe/Multiplayer/MapObj/KeyMoveMapPartsNet.h"
-#include "pe/Multiplayer/MapObj/RotateMapPartsNet.h"
-#include "pe/Multiplayer/Puppets/PuppetSensorActor.h"
 
-constexpr static al::ActorFactoryTableEntry customActorEntries[] = {
+constexpr static al::ActorFactoryTableEntry cCustomActorEntries[] = {
     { "Foomin", pe::createActorFunction<pe::Foomin> },
     { "PatanPanel", pe::createActorFunction<pe::PatanPanel> },
     { "PatanPanelStarter", pe::createActorFunction<pe::PatanPanelStarter> },
     { "NeedleSwitchParts", pe::createActorFunction<pe::NeedleSwitchParts> },
-    { "PushTest", pe::createActorFunction<pe::PuppetSensorActor> },
-
-    // Multiplayer syncing actors
-    { "ClockMapParts", pe::createActorFunction<pe::ClockMapPartsNet> },
-    { "RotateMapParts", pe::createActorFunction<pe::RotateMapPartsNet> },
-    { "KeyMoveMapParts", pe::createActorFunction<pe::KeyMoveMapPartsNet> },
 };
 
-pe::ProjectActorFactory::ProjectActorFactory()
-{
+pe::ProjectActorFactory::ProjectActorFactory() {
     static al::ActorFactoryTableEntry
-        outEntries[sizeof(customActorEntries) / sizeof(al::ActorFactoryTableEntry) + sizeof(::ProjectActorFactory::sActorEntries) / sizeof(al::ActorFactoryTableEntry)];
+        outEntries[sizeof(cCustomActorEntries) / sizeof(al::ActorFactoryTableEntry) + sizeof(::ProjectActorFactory::sActorEntries) / sizeof(al::ActorFactoryTableEntry)];
     static bool isInitialized = false;
 
     if (!isInitialized) {
         int i = 0;
 
-        for (const al::ActorFactoryTableEntry& entry : customActorEntries) {
+        for (const al::ActorFactoryTableEntry& entry : cCustomActorEntries) {
             outEntries[i] = entry;
             i++;
         }
@@ -50,7 +39,6 @@ pe::ProjectActorFactory::ProjectActorFactory()
 
 static void projectActorFactoryHook(ProjectActorFactory* factory) { new (factory) pe::ProjectActorFactory(); }
 
-void pe::initProjectActorFactoryHook()
-{
+void pe::initProjectActorFactoryHook() {
     hk::hook::writeBranch(hk::ro::getMainModule(), 0x003d86b0, projectActorFactoryHook);
 }

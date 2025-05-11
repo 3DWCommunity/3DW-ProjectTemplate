@@ -17,13 +17,12 @@ HkTrampoline<void, BunbunStateShellAttack*> changeShellHook = hk::hook::trampoli
 
 HkTrampoline<void, BunbunStateShellAttack*> recoverShellHook = hk::hook::trampoline([](BunbunStateShellAttack* state) {
     if (al::isFirstStep(state))
-        al::tryOnStageSwitch(state->mBunbun, "SwitchRecoverShellOn");
+        al::tryOffStageSwitch(state->mBunbun, "SwitchChangeShellOn");
 
     recoverShellHook.orig(state);
 });
 
-void pe::initBunbunModHooks()
-{
+void pe::initBunbunModHooks() {
     changeShellHook.installAtOffset(hk::ro::getMainModule(), 0x0000e7b0);
     recoverShellHook.installAtOffset(hk::ro::getMainModule(), 0x0000ef80);
     // BunbunStateShellAttackSpinHook::InstallAtOffset(0x0000ea80);

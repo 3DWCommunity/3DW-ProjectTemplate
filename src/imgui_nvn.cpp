@@ -331,7 +331,7 @@ void nvnImGui::InitImGui() {
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     FsHelper::LoadData loadData = {
-        .path = "sd:/BowsersFuryOnline/ImGuiData/Fonts/SFMonoSquare-Regular.otf"
+        .path = "sd:/Peepa/ImGuiData/Fonts/SFMonoSquare-Regular.otf"
     };
 
     FsHelper::loadFileFromPath(loadData);

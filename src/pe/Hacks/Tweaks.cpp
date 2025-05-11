@@ -62,7 +62,7 @@ namespace pe {
         al::Resource* resource = findOrCreateResourceWarn.orig(thisPtr, archive, sth);
         // uncomment this and bowser furry will crash
         // if (resource == nullptr)
-        //     pe::warn("al::ResourceSystem::findOrCreateResource(%p, \"%s\", %s) returned nullptr", thisPtr, archive.cstr(), sth ? sth : "nullptr");
+        //    pe::warn("al::ResourceSystem::findOrCreateResource(%p, \"%s\", %s) returned nullptr", thisPtr, archive.cstr(), sth ? sth : "nullptr");
 
         return resource;
     });

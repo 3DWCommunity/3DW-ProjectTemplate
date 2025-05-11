@@ -11,7 +11,6 @@
 #include "hk/hook/Trampoline.h"
 #include "hk/ro/RoUtil.h"
 #include "nn/fs.h"
-#include "pe/Enet/NetClient.h"
 #include "pe/Util/Log.h"
 #include "prim/seadEndian.h"
 #include "prim/seadSafeString.h"
@@ -40,7 +39,7 @@ namespace pe {
 
         if (std::strncmp(filePath, "content:/", 9) == 0) {
             char path[1024] { 0 };
-            strcat(path, "sd:/BowsersFuryOnline/cache/");
+            strcat(path, "sd:/Peepa/cache/");
             strcat(path, filePath + 9);
             if (FsHelper::isFileExist(path))
                 return openFileHook.orig(out, path, mode);
@@ -50,9 +49,7 @@ namespace pe {
     });
 
     static sead::ArchiveRes* loadArchiveHook(const sead::SafeString& path) {
-        if (
-            FsHelper::isFileExist(al::StringTmp<256>("content:/%s.sarc", path.cstr()).cstr())
-            or FsHelper::isFileExist(al::StringTmp<256>("sd:/BowsersFuryOnline/cache/%s.sarc", path.cstr()).cstr())) {
+        if (FsHelper::isFileExist(al::StringTmp<256>("sd:/Peepa/cache/%s.sarc", path.cstr()).cstr())) {
             return al::loadArchiveWithExt(path, "sarc");
         } else
             return al::loadArchiveWithExt(path, "szs");
@@ -180,7 +177,7 @@ namespace pe {
                     sead::FixedSafeString<maxPathLength>* originalPath = new sead::FixedSafeString<maxPathLength>(*rawPath);
                     rawPath->replaceString(rootWalkPath, "");
 
-                    sead::FormatFixedSafeString<maxPathLength>* outPath = new sead::FormatFixedSafeString<maxPathLength>("sd:/BowsersFuryOnline/cache/%s", rawPath->cstr() + 1);
+                    sead::FormatFixedSafeString<maxPathLength>* outPath = new sead::FormatFixedSafeString<maxPathLength>("sd:/Peepa/cache/%s", rawPath->cstr() + 1);
                     if (rawPath->endsWith(".szs")) {
 
                         outPath->removeSuffix(".szs");
@@ -212,8 +209,8 @@ namespace pe {
 
         sHookDisabled = true;
         sead::ScopedCurrentHeapSetter setter(sPatchHeap);
-        nn::fs::DeleteDirectoryRecursively("sd:/BowsersFuryOnline/cache");
-        createDirectoryRecursively("sd:/BowsersFuryOnline/cache");
+        nn::fs::DeleteDirectoryRecursively("sd:/Peepa/cache");
+        createDirectoryRecursively("sd:/Peepa/cache");
         patchDirRecursive("content:", "content:");
         sHookDisabled = false;
 

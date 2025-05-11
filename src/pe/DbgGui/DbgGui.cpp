@@ -17,13 +17,11 @@
 #include "pe/DbgGui/Windows/HeapViewer.h"
 #include "pe/DbgGui/Windows/ImGuiDemo.h"
 #include "pe/DbgGui/Windows/Log.h"
-#include "pe/DbgGui/Windows/Multiplayer.h"
 #include "pe/DbgGui/Windows/PoseViewer.h"
 #include "pe/DbgGui/Windows/RCSCamera.h"
 #include "pe/Hacks/FSHacks.h"
 #include "pe/Hacks/PlacementHolderMod.h"
 #include "pe/Hacks/Tweaks.h"
-#include "pe/Multiplayer/MultiplayerManager.h"
 #include "pe/Util/Log.h"
 #include <sead/heap/seadHeapMgr.h>
 
@@ -61,15 +59,13 @@ namespace pe {
 
                 pe::gui::DbgGui::createInstance(nullptr);
                 pe::gui::DbgGui::instance()->getSharedData().productSequence = sequence;
-
-                pe::MultiplayerManager::createInstance(nullptr);
-                pe::MultiplayerManager::instance()->init();
             }
 
-            // pe::applyRomFSPatches();
+            pe::applyRomFSPatches();
             nvnImGui::InitImGui();
 
             installTweaksAfterInit();
+            installFSHacks();
         }
 
         HkTrampoline<void, ProductSequence*, const al::SequenceInitInfo&> productSequenceInitHook = hk::hook::trampoline([](ProductSequence* sequence, const al::SequenceInitInfo& info) {
@@ -100,7 +96,6 @@ namespace pe {
             mComponents.pushBack(new ActorBrowser);
             mComponents.pushBack(new RCSCamera);
             mComponents.pushBack(new Hacks);
-            mComponents.pushBack(new Multiplayer);
             mComponents.pushBack(new PoseViewer);
 #endif
         }
