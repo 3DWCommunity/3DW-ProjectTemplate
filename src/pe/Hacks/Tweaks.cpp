@@ -8,6 +8,7 @@
 #include "hk/diag/diag.h"
 #include "hk/hook/InstrUtil.h"
 #include "hk/hook/Trampoline.h"
+#include "hk/hook/a64/Assembler.h"
 #include "hk/ro/RoUtil.h"
 #include "pe/Util/Log.h"
 #include <cstring>
@@ -39,18 +40,7 @@ namespace pe {
         HK_ABORT("Allocation of %zu bytes with alignment %u failed on heap %s with %d bytes free", arg->allocSize, arg->allocAlignment, arg->heap->getName().cstr(), arg->heap->getFreeSize());
     }
 
-    constexpr u32 cDisableFirstAppearCutscene[] {
-        0x52800000,
-        0xD65F03C0,
-    };
-
-    constexpr u32 cNoFadeToWhite[] {
-        0x52800000,
-        0xD65F03C0,
-    };
-    constexpr u32 cSceneObjHolderSize[] {
-        0x528007C2,
-    };
+    constexpr size cSceneObjHolderSize = 62;
 
     static sead::FrameHeap* createSceneResourceHeapHook(size_t size, const sead::SafeString& name, sead::Heap* parent, s32 alignment, sead::Heap::HeapDirection direction, bool something) {
         if (al::isEqualString(name, "SceneHeapResource") && size == 136314880 /* 130.0 MB */)
@@ -77,10 +67,10 @@ namespace pe {
         hk::hook::writeBranchLink(hk::ro::getMainModule(), 0x008d59ec, animInfoTableStrcmpCheck);
         hk::hook::writeBranch(hk::ro::getMainModule(), 0x008316c0, liveActorGroupRegisterActorHook);
         hk::hook::writeBranch(hk::ro::getMainModule(), 0x00872c30, allocFailedReporter);
-        hk::ro::getMainModule()->writeRo(0x0041d3f0, cNoFadeToWhite, sizeof(cNoFadeToWhite));
-        hk::ro::getMainModule()->writeRo(0x0020d9c0, cDisableFirstAppearCutscene, sizeof(cDisableFirstAppearCutscene));
         hk::hook::writeBranch(hk::ro::getMainModule(), 0x00720554, createSceneResourceHeapHook);
-        hk::ro::getMainModule()->writeRo(0x003e624c, cSceneObjHolderSize, sizeof(cSceneObjHolderSize));
+        hk::hook::a64::assemble<"mov w2, {}">()
+            .arg(cSceneObjHolderSize)
+            .installAtMainOffset(0x003e624c);
         findOrCreateResourceWarn.installAtSym<"_ZN2al14ResourceSystem20findOrCreateResourceERKN4sead14SafeStringBaseIcEEPKc">();
         initializeGfxMemoryPoolHook.installAtOffset(hk::ro::getMainModule(), 0x00758710);
     }

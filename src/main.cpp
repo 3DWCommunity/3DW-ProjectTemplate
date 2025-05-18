@@ -15,6 +15,7 @@
 #include "pe/Hacks/FSHacks.h"
 #include "pe/Hacks/PlacementHolderMod.h"
 #include "pe/Hacks/Tweaks.h"
+#include "pe/Hacks/WiiUMod.h"
 #include "pe/Util/Log.h"
 
 extern "C" void hkMain() {
@@ -32,5 +33,5 @@ extern "C" void hkMain() {
     pe::initExecuteDirectorExtensionHooks();
     pe::installTweaks();
     pe::gui::initDbgGuiHooks();
-    //   pe::initWiiUModHooks();
+    // pe::initWiiUModHooks();
 }

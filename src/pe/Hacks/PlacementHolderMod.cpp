@@ -4,20 +4,19 @@
 #include "al/Placement/PlacementHolder.h"
 #include "heap/seadHeapMgr.h"
 #include "hk/hook/Trampoline.h"
+#include "hk/hook/a64/Assembler.h"
 #include "hk/ro/RoUtil.h"
 #include "pe/DbgGui/DbgGui.h"
 #include "pe/Util/Log.h"
 #include <sead/basis/seadNew.h>
 
-static void deletePlacementHolderIfExist(al::LiveActor* actor)
-{
+static void deletePlacementHolderIfExist(al::LiveActor* actor) {
     al::PlacementHolder* placementHolder = actor->getPlacementHolder();
     if (placementHolder)
         delete placementHolder;
 }
 
-al::PlacementHolder::~PlacementHolder()
-{
+al::PlacementHolder::~PlacementHolder() {
     if (pe::getPlacementInfoHeap()) {
         pe::getPlacementInfoHeap()->destroy();
         pe::getPlacementInfoHeap() = nullptr;
@@ -94,27 +93,28 @@ HkTrampoline<void, al::PlacementHolder*, const al::PlacementInfo&> placementHold
 
 namespace pe {
 
-sead::FrameHeap*& getPlacementInfoHeap()
-{
-    static sead::FrameHeap* heap { nullptr };
-    return heap;
-}
+    sead::FrameHeap*& getPlacementInfoHeap() {
+        static sead::FrameHeap* heap { nullptr };
+        return heap;
+    }
 
-void createPlacementInfoHeap()
-{
-    getPlacementInfoHeap() = sead::FrameHeap::create(1024 * 1024 * 0.5, "PlacementInfoHeap", pe::gui::getPeepaHeap(), 8, sead::ExpHeap::cHeapDirection_Forward, false);
-}
+    void createPlacementInfoHeap() {
+        getPlacementInfoHeap() = sead::FrameHeap::create(1024 * 1024 * 0.5, "PlacementInfoHeap", pe::gui::getPeepaHeap(), 8, sead::ExpHeap::cHeapDirection_Forward, false);
+    }
 
-void initPlacementHolderModHooks()
-{
-    singleModeScenePrepareDestroyHook.installAtOffset(hk::ro::getMainModule(), 0x003e9460);
-    hk::ro::getMainModule()->writeRo(0x0085b4d4, 0x52800900); // mov w0, #0x48
-    hk::ro::getMainModule()->writeRo(0x0085b5ac, 0x52800900); // mov w0, #0x48
-    liveActorDtor1Hook.installAtOffset(hk::ro::getMainModule(), 0x0085b5d0);
-    liveActorDtor2Hook.installAtOffset(hk::ro::getMainModule(), 0x0085b680);
-    liveActorDtor3Hook.installAtOffset(hk::ro::getMainModule(), 0x0085b720);
-    placementHolderCtorHook.installAtOffset(hk::ro::getMainModule(), 0x00984150);
-    placementHolderInitHook.installAtOffset(hk::ro::getMainModule(), 0x00984170);
-}
+    void initPlacementHolderModHooks() {
+        singleModeScenePrepareDestroyHook.installAtOffset(hk::ro::getMainModule(), 0x003e9460);
+
+        hk::hook::a64::assemble<"mov w0, {}">()
+            .arg(sizeof(al::PlacementHolder))
+            .installAtMainOffset(0x0085b4d4)
+            .installAtMainOffset(0x0085b5ac);
+
+        liveActorDtor1Hook.installAtOffset(hk::ro::getMainModule(), 0x0085b5d0);
+        liveActorDtor2Hook.installAtOffset(hk::ro::getMainModule(), 0x0085b680);
+        liveActorDtor3Hook.installAtOffset(hk::ro::getMainModule(), 0x0085b720);
+        placementHolderCtorHook.installAtOffset(hk::ro::getMainModule(), 0x00984150);
+        placementHolderInitHook.installAtOffset(hk::ro::getMainModule(), 0x00984170);
+    }
 
 } // namespace pe

@@ -8,6 +8,7 @@
 #include "helpers/fsHelper.h"
 #include "hk/hook/InstrUtil.h"
 #include "hk/hook/Trampoline.h"
+#include "hk/hook/a64/Assembler.h"
 #include "hk/ro/RoUtil.h"
 #include "imgui.h"
 #include "pe/Util/Nerve.h"
@@ -99,16 +100,26 @@ namespace pe {
             startBgm3Hook.installAtOffset(hk::ro::getMainModule(), 0x008eba40);
         }
 
+        auto disableBloomAsm = hk::hook::a64::assemble<"nop", true>();
+        auto disableDofAsm = hk::hook::a64::assemble<"ret", true>();
+
         void Hacks::update() { }
         void Hacks::draw() {
             if (getDbgGuiSharedData().showHacks) {
                 if (ImGui::Begin("Hacks", &getDbgGuiSharedData().showHacks)) {
                     ImGui::Checkbox("Hide Layouts", &sIsDisabledLayouts);
                     ImGui::Checkbox("Disable StartClipped (LAG)", &sIsDisabledStartClipped);
-                    if (ImGui::Checkbox("Disable Bloom", &sIsDisabledBloom))
-                        hk::ro::getMainModule()->writeRo(0x009571d4, sIsDisabledBloom ? 0xD503201F : 0x97F92B97);
+                    if (ImGui::Checkbox("Disable Bloom", &sIsDisabledBloom)) {
+                        if (sIsDisabledBloom)
+                            disableBloomAsm.installAtMainOffset(0x009571d4);
+                        else
+                            disableBloomAsm.uninstall();
+                    }
                     if (ImGui::Checkbox("Disable DOF", &sIsDisabledDepthOfField)) {
-                        hk::ro::getMainModule()->writeRo(0x0088ef40, sIsDisabledDepthOfField ? 0xD65F03C0 : 0x39420008);
+                        if (sIsDisabledDepthOfField)
+                            disableDofAsm.installAtMainOffset(0x0088ef40);
+                        else
+                            disableDofAsm.uninstall();
                     }
 
                     ImGui::Separator();
