@@ -13,12 +13,14 @@
 #include "nn/fs.h"
 #include "pe/DbgGui/MenuBar.h"
 #include "pe/DbgGui/Windows/ActorBrowser.h"
+#include "pe/DbgGui/Windows/Crc32Reverse.h"
 #include "pe/DbgGui/Windows/Hacks.h"
 #include "pe/DbgGui/Windows/HeapViewer.h"
 #include "pe/DbgGui/Windows/ImGuiDemo.h"
 #include "pe/DbgGui/Windows/Log.h"
 #include "pe/DbgGui/Windows/PoseViewer.h"
 #include "pe/DbgGui/Windows/RCSCamera.h"
+#include "pe/Hacks/CrcReverse.h"
 #include "pe/Hacks/FSHacks.h"
 #include "pe/Hacks/PlacementHolderMod.h"
 #include "pe/Hacks/Tweaks.h"
@@ -54,6 +56,8 @@ namespace pe {
             pe::gui::getPeepaHeap() = sead::ExpHeap::create(1024 * 1024 * 3, "PeepaHeap", al::getSequenceHeap(), 8, sead::ExpHeap::cHeapDirection_Forward, false);
             pe::initializeLog(pe::gui::getPeepaHeap());
             pe::createPlacementInfoHeap();
+            installDebugCrc32HashCollector();
+            pe::createCrc32ReverseHeap();
             {
                 sead::ScopedCurrentHeapSetter heapSetter(pe::gui::getPeepaHeap());
 
@@ -97,6 +101,7 @@ namespace pe {
             mComponents.pushBack(new RCSCamera);
             mComponents.pushBack(new Hacks);
             mComponents.pushBack(new PoseViewer);
+            mComponents.pushBack(new Crc32Reverse);
 #endif
         }
 

@@ -3,6 +3,7 @@
 #include "al/Base/String.h"
 #include "al/Controller/ControllerUtil.h"
 #include "hk/hook/Trampoline.h"
+#include "hk/hook/a64/Assembler.h"
 #include "hk/ro/RoUtil.h"
 #include "hk/util/hash.h"
 #include "nn/socket.h"

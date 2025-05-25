@@ -1,0 +1,4 @@
+@game:110
+
+_ZN4sead9HashCRC3214calcStringHashEPKc = 0x0073e3d0
+_ZN4sead9HashCRC328calcHashEPKvj = 0x0073e2a0

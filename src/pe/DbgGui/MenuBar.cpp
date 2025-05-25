@@ -20,6 +20,7 @@ namespace pe {
                     ImGui::Checkbox("RCSCamera", &getDbgGuiSharedData().showRCSCamera);
                     ImGui::Checkbox("Multiplayer", &getDbgGuiSharedData().showMultiplayer);
                     ImGui::Checkbox("PoseViewer", &getDbgGuiSharedData().showPoseViewer);
+                    ImGui::Checkbox("Crc32Reverse", &getDbgGuiSharedData().showCrc32Reverse);
                     ImGui::EndMenu();
                 }
                 ImGui::Separator();

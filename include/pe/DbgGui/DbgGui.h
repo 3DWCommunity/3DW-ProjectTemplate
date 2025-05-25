@@ -8,48 +8,49 @@
 struct ProductSequenceInitHook;
 
 namespace pe {
-namespace gui {
+    namespace gui {
 
-    class IComponent;
-    class Peekabo;
+        class IComponent;
+        class Peekabo;
 
-    sead::ExpHeap*& getPeepaHeap();
+        sead::ExpHeap*& getPeepaHeap();
 
-    class DbgGui {
-        SEAD_SINGLETON_DISPOSER(DbgGui);
+        class DbgGui {
+            SEAD_SINGLETON_DISPOSER(DbgGui);
 
-        sead::PtrArray<IComponent> mComponents;
+            sead::PtrArray<IComponent> mComponents;
 
-        struct {
-            ProductSequence* productSequence = nullptr;
+            struct {
+                ProductSequence* productSequence = nullptr;
 
-            bool showDemoWindow = false;
-            bool showLog = true;
-            bool showHeapViewer = false;
-            bool showActorBrowser = false;
-            bool showHacks = false;
-            bool showRCSCamera = false;
-            bool showMultiplayer = false;
-            bool showPoseViewer = false;
-        } mSharedData;
+                bool showDemoWindow = false;
+                bool showLog = true;
+                bool showHeapViewer = false;
+                bool showActorBrowser = false;
+                bool showHacks = false;
+                bool showRCSCamera = false;
+                bool showMultiplayer = false;
+                bool showPoseViewer = false;
+                bool showCrc32Reverse = false;
+            } mSharedData;
 
-        bool mIsSingleModeScene = false;
+            bool mIsSingleModeScene = false;
 
-    public:
-        DbgGui();
+        public:
+            DbgGui();
 
-        void update();
-        void draw();
+            void update();
+            void draw();
 
-        bool isSingleModeScene() const { return mIsSingleModeScene; }
+            bool isSingleModeScene() const { return mIsSingleModeScene; }
 
-        auto& getSharedData() { return mSharedData; }
+            auto& getSharedData() { return mSharedData; }
 
-        friend class IComponent;
-        friend ::ProductSequenceInitHook;
-    };
+            friend class IComponent;
+            friend ::ProductSequenceInitHook;
+        };
 
-    void initDbgGuiHooks();
+        void initDbgGuiHooks();
 
-} // namespace gui
+    } // namespace gui
 } // namespace pe
