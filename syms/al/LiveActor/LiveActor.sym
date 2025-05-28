@@ -66,8 +66,8 @@ _ZThn32_NK2al9LiveActor20getStageSwitchKeeperEv = 0x00003870
 _ZThn32_N2al9LiveActor21initStageSwitchKeeperEv = 0x0085ce30 
 _ZThn40_NK2al9LiveActor17getSceneObjHolderEv = 0x0085cbe0
 _ZThn48_NK2al9LiveActor18getAreaObjDirectorEv = 0x0085cc20
-_ZThn56_NK2al9LiveActor20getCameraDirector_RSEv = 0x0085cc40
-_ZThn64_NK2al9LiveActor18getSceneCameraInfoEv = 0x0085cc60
+_ZThn56_NK2al9LiveActor18getSceneCameraInfoEv = 0x0085cc60
+_ZThn64_NK2al9LiveActor20getCameraDirector_RSEv = 0x0085cc40
 _ZThn72_NK2al9LiveActor20getCollisionDirectorEv = 0x0085cc00
 
 _ZN2al9LiveActor16initActionKeeperEPKcS2_ = 0x0085ccd0
