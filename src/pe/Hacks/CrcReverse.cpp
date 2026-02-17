@@ -8,7 +8,7 @@
 #include "hk/hook/Trampoline.h"
 #include "hk/os/Mutex.h"
 #include "hk/ro/RoUtil.h"
-#include "hk/util/FixedCapacityArray.h"
+#include "hk/util/FixedVec.h"
 #include "imgui.h"
 #include "nn/fs.h"
 #include "pe/DbgGui/DbgGui.h"
@@ -31,7 +31,7 @@ namespace pe {
         const char* str = nullptr;
     };
 
-    static hk::util::FixedCapacityArray<HashEntry, 0x8000> sEntries;
+    static hk::util::FixedVec<HashEntry, 0x8000> sEntries;
     static hk::os::Mutex sEntriesCriticalSection;
 
     static bool isAlreadyAdded(u32 hash) {

@@ -67,6 +67,7 @@ namespace pe {
 
             pe::applyRomFSPatches();
             nvnImGui::InitImGui();
+            nvnImGui::addDrawFunc(drawDbgGui);
 
             installTweaksAfterInit();
             installFSHacks();
@@ -118,7 +119,6 @@ namespace pe {
         void initDbgGuiHooks() {
 #ifdef DEBUGMENU
             nvnImGui::InstallHooks();
-            nvnImGui::addDrawFunc(drawDbgGui);
             hk::hook::writeBranchLink(hk::ro::getMainModule(), 0x003fcf68, productSequenceUpdateHook);
 #endif
             productSequenceInitHook.installAtOffset(hk::ro::getMainModule(), 0x003fc4d0);

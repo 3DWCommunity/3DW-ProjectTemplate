@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hk/diag/diag.h"
+#include <cstdarg>
 #include <cstdio>
 #include <sead/container/seadPtrArray.h>
 #include <sead/heap/seadHeap.h>
@@ -17,20 +17,13 @@ namespace pe {
     void initializeLog(sead::Heap* parent);
     sead::PtrArray<LogType>& getLogLines();
     char* addLog(LogType type, size_t len);
+    bool& shouldLogWindowScrollDown();
 
-#define PE_UTIL_LOG_TEMPLATE(NAME, TYPE)                  \
-    template <typename... Args>                           \
-    void NAME(const char* fmt, Args... args) {            \
-        size_t size = snprintf(nullptr, 0, fmt, args...); \
-        char* msg = addLog(LogType::TYPE, size);          \
-        snprintf(msg, size + 1, fmt, args...);            \
-        hk::diag::debugLog("%s", msg);                    \
-    }
-
-    PE_UTIL_LOG_TEMPLATE(log, Log);
-    PE_UTIL_LOG_TEMPLATE(warn, Warning);
-    PE_UTIL_LOG_TEMPLATE(err, Error);
-
-#undef PE_UTIL_LOG_TEMPLATE
+    void log(const char* fmt, ...);
+    void warn(const char* fmt, ...);
+    void err(const char* fmt, ...);
+    void log(const char* fmt, std::va_list arg);
+    void warn(const char* fmt, std::va_list arg);
+    void err(const char* fmt, std::va_list arg);
 
 } // namespace pe
