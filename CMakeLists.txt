@@ -32,3 +32,7 @@ include(sys/cmake/module.cmake)
 include(sys/cmake/deploy.cmake)
 include(sys/cmake/sail.cmake)
 usesail(${PROJECT_NAME})
+
+include(cmake/romfs.cmake)
+
+generate_romfs()
