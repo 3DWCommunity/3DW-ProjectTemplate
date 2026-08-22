@@ -4,7 +4,7 @@ on: [workflow_dispatch, push, pull_request]
 
 jobs:
   build:
-    runs-on: alpine
+    runs-on: ubuntu-latest
     container:
       image: fruityloops1/alpine-hakkun
     strategy:
